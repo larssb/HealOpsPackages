@@ -5,4 +5,6 @@
 Invoke-HealOps -TestFilePath $PSScriptRoot\TestsAndRepairs\octopusdeploy.tentacle.Tests.ps1
 
 # Test for enough diskspace
-Invoke-HealOps -TestFilePath $PSScriptRoot\TestsAndRepairs\octopusdeploy.tentacle.Tests.ps1
+Invoke-HealOps -TestFilePath $PSScriptRoot\TestsAndRepairs\system.resource.diskspace.Tests.ps1
+
+# 
