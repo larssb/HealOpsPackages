@@ -1,3 +1,4 @@
+#Requires -Module HealOps
 <#
     - Script for invoking HealOps on a Sitecore instance runing in Danske Spil
 #>
