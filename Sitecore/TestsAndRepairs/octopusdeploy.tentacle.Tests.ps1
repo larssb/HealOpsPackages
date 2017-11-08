@@ -45,7 +45,7 @@ Describe "octopusdeploy.tentacle" {
         try {
             $request = Invoke-WebRequest -Uri $octopusDeployTentacleURI -Method Get -UseBasicParsing;
         } catch {
-            "The Octopus Deploy webrequest call failed. The error was > $_ " | Add-Content -Path $PSScriptRoot\log.txt -Encoding UTF8;
+            write-verbose -Message "The Octopus Deploy webrequest call failed. The error was > $_"
 
             $testException = $_
         }
@@ -59,6 +59,7 @@ Describe "octopusdeploy.tentacle" {
         $testException | Should Not Be 503
 
         # Determine the result of a successfull invoke-webrequest try
+        $global:assertionResult = $request.StatusCode
         $request.StatusCode | Should Be 200
     }
 }

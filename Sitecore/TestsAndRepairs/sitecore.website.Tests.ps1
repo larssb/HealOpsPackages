@@ -1,8 +1,8 @@
-Describe "The Sitecore instance is alive" {
+Describe "sitecore.instance" {
     <#
         - Test that the Sitecore website instance is ready
     #>
-    It "The Sitecore should return HTTP200" {
+    It "Sitecore should return HTTP200" {
         <#
             - Set webrequest variables
 
@@ -16,14 +16,22 @@ Describe "The Sitecore instance is alive" {
 
         # request the endpoint
         try {
-            $webReq = Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing;
+            $request = Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing
         } catch {
-            $webReq = "requestFailed";
-
-            "The error was > $_ " | Add-Content -Path $PSScriptRoot\log.txt -Encoding UTF8;
+            write-verbose -Message "The Sitecore webrequest call failed. The error was > $_"
+            
+            $testException = $_
         }
 
+        # Test if the request came through at all
+        if($testException) {
+            # The request did not come through. Reasoning > the endpoint is not available therefore HTTP503
+            $testException = 503
+        }
+        $testException | Should Not Be 503
+
         # Determine the result of the test
-        $webReq.StatusCode | Should be "200";
+        $global:assertionResult = $request.StatusCode        
+        $request.StatusCode | Should be 200
     }
 }

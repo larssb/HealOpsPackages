@@ -31,8 +31,6 @@ if($TestData.FailureMessage -eq 503) {
         $remediationResult = $false
     }
 
-    # Report on the result of the remediation
-
     # Return to caller
     $remediationResult
 }
