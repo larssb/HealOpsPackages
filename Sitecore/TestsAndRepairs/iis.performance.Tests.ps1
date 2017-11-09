@@ -24,7 +24,7 @@ Describe "iis.performance.cpu" {
         $sortedCpuPercentages = $cpuPercentagesEnumerator | Sort-Object Value
 
         # Find the median
-        $cpuPercentageMedian = $sortedCpuPercentages.Get(29) # 29 is our median number as we are doing 59 samples with Get-Counter.
+        $cpuPercentageMedian = $sortedCpuPercentages.Get(29) # 29 is our median number as we are doing 59 samples with Get-Counter. !!!WRON - Should be more samples....and fix the median.
 
         # Determine the result of the test
         $global:assertionResult = $cpuPercentageMedian.value
