@@ -1,4 +1,4 @@
-Describe "sitecore.instance" {
+Describe "sitecore.website" {
     <#
         - Test that the Sitecore website instance is ready
     #>
