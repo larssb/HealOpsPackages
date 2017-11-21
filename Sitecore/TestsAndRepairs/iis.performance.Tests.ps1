@@ -4,7 +4,7 @@ Describe "iis.performance.cpu" {
     #>
     It "W3WP IIS process usage should be below 80% over a 5 minute period" {
         # Do the measurement
-        $cpuPercentMeasures = Get-Counter -ComputerName localhost -Counter '\Process(w3wp)\% Processor Time' -MaxSamples 59 -SampleInterval 1 `
+        $cpuPercentMeasures = Get-Counter -ComputerName localhost -Counter '\Process(w3wp)\% Processor Time' -MaxSamples 300 -SampleInterval 1 `
         | Select-Object -ExpandProperty countersamples `
         | Select-Object -Property instancename,@{L='CPU';E={($_.Cookedvalue/100).toString('P')}}
 
@@ -24,7 +24,7 @@ Describe "iis.performance.cpu" {
         $sortedCpuPercentages = $cpuPercentagesEnumerator | Sort-Object Value
 
         # Find the median
-        $cpuPercentageMedian = $sortedCpuPercentages.Get(29) # 29 is our median number as we are doing 59 samples with Get-Counter. !!!WRON - Should be more samples....and fix the median.
+        $cpuPercentageMedian = $sortedCpuPercentages.Get(150) # 150 is our median number as we are doing 300 samples with Get-Counter.
 
         # Determine the result of the test
         $global:assertionResult = $cpuPercentageMedian.value
