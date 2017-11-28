@@ -1,3 +1,18 @@
 {
-    "environment": ""
+    "environment": "",
+    "iis.performance.Tests": {
+        "jobInterval": 1
+    },
+    "iis.resource.logs.Tests": {
+        "jobInterval": 1
+    },
+    "octopusdeploy.tentacle.Tests": {
+        "jobInterval": 1
+    },
+    "sitecore.website.Tests": {
+        "jobInterval": 1
+    },
+    "system.resource.diskspace.Tests": {
+        "jobInterval": 1
+    }
 }
