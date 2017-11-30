@@ -1,0 +1,6 @@
+{
+    "environment": "",
+    "citrix.services.Tests": {
+        "jobInterval": 1
+    }
+}
