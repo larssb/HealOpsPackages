@@ -8,7 +8,8 @@ Describe "citrix.services" {
 
         if ($null -ne $citrixServices) {
             foreach ($citrixService in $citrixServices) {
-                if ($citrixService.Status -ne "Running") {
+                # The BNBOOTP svc. stops automatically. By design by Citrix.
+                if ($citrixService.Status -ne "Running" -and $citrixService.Name -ne "BNBOOTP") {
                     $serviceOkay = 1
                     break
                 } else {
