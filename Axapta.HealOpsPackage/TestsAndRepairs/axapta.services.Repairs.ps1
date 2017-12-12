@@ -12,16 +12,16 @@ param(
 #############
 try {
     # Get all the Citrix services on the local computer. Uses the Displayname parameter as this is the best bet of getting Citrix services.
-    $citrixServices = get-service -DisplayName "*Citrix*"
+    $services = get-service -DisplayName "*Ax*"
 } catch {
     $remediationResult = $false
 }
 
-if ($null -ne $citrixServices) {
-    foreach ($citrixService in $citrixServices) {
-        if ($citrixService.Status -ne "Running") {
+if ($null -ne $services) {
+    foreach ($service in $services) {
+        if ($service.Status -ne "Running") {
             try {
-                Start-Service $citrixService
+                Start-Service $service
                 
                 $remediationResult = $true
             } catch {
