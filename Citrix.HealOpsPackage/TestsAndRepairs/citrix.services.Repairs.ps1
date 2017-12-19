@@ -21,8 +21,8 @@ if ($null -ne $citrixServices) {
     foreach ($citrixService in $citrixServices) {
         if ($citrixService.Status -ne "Running") {
             try {
-                Start-Service $citrixService
-                
+                Start-Service $citrixService -ErrorAction Stop
+
                 $remediationResult = $true
             } catch {
                 $remediationResult = $false
@@ -30,7 +30,7 @@ if ($null -ne $citrixServices) {
         } else {
             $remediationResult = $true
         }
-    }   
+    }
 } else {
     $remediationResult = $false
 }
