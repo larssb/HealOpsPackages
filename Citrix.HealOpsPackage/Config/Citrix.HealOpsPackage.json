@@ -1,5 +1,5 @@
 {
-    "environment": "",
+    "environment": "Citrix",
     "citrix.services.Tests": {
         "jobInterval": 1
     }

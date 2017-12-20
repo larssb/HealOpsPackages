@@ -1,6 +1,6 @@
 {
-    "environment": "INSERT_ENVIRONMENT_HERE",
-    "test.name": {
-        "jobInterval": "NUMBER_REPRESENTING_THE_JOB_REPETITION_INTERVAL"
+    "environment": "Vegas.dk",
+    "vegas.website.Tests": {
+        "jobInterval": "2"
     }
 }
