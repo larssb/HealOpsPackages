@@ -15,7 +15,7 @@ Describe "vegas.sitecore.website" {
             $request = Invoke-WebRequest -Uri $uri -Method Get -UseBasicParsing
         } catch {
             write-verbose -Message "The Vegas.dk webrequest call failed. The error was > $_"
-            
+
             $testException = $_
         }
 
@@ -26,8 +26,11 @@ Describe "vegas.sitecore.website" {
         }
         $testException | Should Not Be 503
 
+        # Declare the global failure variable.
+        $global:failedTestResult = $testException
+
         # Determine the result of the test
-        $global:assertionResult = $request.StatusCode        
+        $global:passedTestResult = $request.StatusCode
         $request.StatusCode | Should be 200
     }
 }
