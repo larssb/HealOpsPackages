@@ -7,6 +7,32 @@ param(
     $TestData
 )
 
+####################
+# Helper functions #
+####################
+function Start-MyService () {
+    [CmdletBinding()]
+    [OutputType([Boolean])]
+    param(
+        [Parameter(Mandatory=$true, HelpMessage="A Windows service object. Representing the service to be started.")]
+        [ServiceController]$service
+    )
+
+    #############
+    # Execution #
+    #############
+    try {
+        # It is not in a pending state. Must be stopped. Start it.
+        Start-Service $service -ErrorAction Stop
+        $remediationResult = $true
+    } catch {
+        $remediationResult = $false
+    }
+
+    # Return
+    $remediationResult
+}
+
 #############
 # Execution #
 #############
@@ -19,11 +45,24 @@ try {
 
 if ($null -ne $citrixServices) {
     foreach ($citrixService in $citrixServices) {
-        if ($citrixService.Status -ne "Running") {
-            try {
-                Start-Service $citrixService -ErrorAction Stop
+        # Check if the service is pending (Stop or Start pending)
+        $pendingService = Get-WmiObject -Class win32_service -Filter "Name = '$($citrixService.Name)' and state like '%Pending'"
 
+        if ($null -ne $pendingService) {
+            try {
+                # Stop the service from being in a pending state
+                Stop-Process -Id $pendingService.processid -Force -ErrorAction Stop
                 $remediationResult = $true
+            } catch {
+                $remediationResult = $false
+            }
+
+            # Now start the service again after having handled the pending state of the service
+            $remediationResult = Start-MyService -service $citrixService
+        } elseif ($citrixService.Status -ne "Running") {
+            try {
+                # It is not in a pending state. Must be stopped. Start it.
+                $remediationResult = Start-MyService -service $citrixService
             } catch {
                 $remediationResult = $false
             }
