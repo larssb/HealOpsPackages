@@ -24,10 +24,9 @@ Describe "vegas.sitecore.website" {
             # The request did not come through. Reasoning > the endpoint is not available therefore HTTP503
             $testException = 503
         }
-        $testException | Should Not Be 503
-
         # Declare the global failure variable.
         $global:failedTestResult = $testException
+        $testException | Should Not Be 503
 
         # Determine the result of the test
         $global:passedTestResult = $request.StatusCode
