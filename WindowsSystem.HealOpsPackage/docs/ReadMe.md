@@ -1,4 +1,4 @@
-# ReadMe for the Monitoring.Helpers.WindowsSystem module
+# ReadMe for the WindowsSystem.HealOpsPackage module
 
 ## About the module
 
