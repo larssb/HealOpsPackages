@@ -1,0 +1,6 @@
+{
+    "environment": "Vegas.dk",
+    "wSystem.resource.diskspace.Tests": {
+        "jobInterval": 5
+    }
+}
