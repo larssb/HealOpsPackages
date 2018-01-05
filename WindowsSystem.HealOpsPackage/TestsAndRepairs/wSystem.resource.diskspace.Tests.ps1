@@ -1,3 +1,6 @@
+# Import the Get-wFreeDiskspace function
+. $PSScriptRoot/../Private/Get-wFreeDiskspace.ps1
+
 Describe "wsystem.resource.diskspace" {
     <#
         - Tests that there is more than 10GB left on all drives on the system
