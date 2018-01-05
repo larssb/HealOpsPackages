@@ -28,7 +28,7 @@
     Copyright = '(c) 2017 Lars Bengtsson. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'Helper functions. That can be re-used between HealOps packages.'
+    Description = 'A rather generic HealOps package for testing and repairing on Windows system related states.'
 
     # Minimum version of the Windows PowerShell engine required by this module
     # PowerShellVersion = ''
