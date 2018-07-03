@@ -56,7 +56,6 @@ function Get-LPInputFormat{
 
 }
 
-
 # ---------------------------------------------------------------------------
 ### <Function name='Get-LPOutputFormat'>
 ### <Description>
@@ -87,7 +86,6 @@ function Get-LPOutputFormat{
 
 }
 
-
 # ---------------------------------------------------------------------------
 ### <Function name='Invoke-LPExecute'>
 ### <Description>
@@ -114,7 +112,6 @@ function Invoke-LPExecute{
 
 }
 
-
 # ---------------------------------------------------------------------------
 ### <Function name='Invoke-LPExecuteBatch'>
 ### <Description>
@@ -133,7 +130,6 @@ function Invoke-LPExecuteBatch{
     $result = $LPQuery.ExecuteBatch($query, $inputtype, $outputtype)
     return $result
 }
-
 
 # ---------------------------------------------------------------------------
 ### <Function name='Get-LPRecord'>
@@ -160,8 +156,6 @@ function Get-LPRecord{
 	}
 	return $LPRecord
 }
-
-
 
 # ---------------------------------------------------------------------------
 ### <Function name='Get-LPRecordSet'>

@@ -11,4 +11,11 @@ param(
 # Execution #
 #############
 
+<#
+    PSEUDO
+
+    - Do disk clean-ups based on the role of the server. As we from that can infer where we are likely to be able to "pickup" harddisk space that we can safely
+    clean-up
+#>
+
 $true
