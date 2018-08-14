@@ -348,7 +348,6 @@
 		"body":[
 			"[System.Diagnostics.CodeAnalysis.SuppressMessageAttribute(\"RULE_NAME","\")]"
 		]
-<<<<<<< HEAD
 	},
 	"SplattingNonPositional": {
 		"prefix": "SplatNonPositional",
@@ -364,7 +363,5 @@
 		"body":[
 			"\\$ArrayOfArguments = \"test.txt\", \"test2.txt\""
 		]
-=======
->>>>>>> 3c0791e5dc4d88c723f600a7b206adc89cdb1f94
 	}
 }
