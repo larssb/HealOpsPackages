@@ -1,0 +1,24 @@
+•	IIS logs parsing
+o	LogParser for IIS. 15 most hit endpoints
+o	Query by:
+•	Metric: iis.website.{’websiteName’}.visits
+•	Get ’websiteName’ from HealOpsPackage config on the node when executing.
+•	Code on node
+•	Parse with logparser  15 most visited last hour.
+•	Report to OpenTSDB
+•	1 metric per ranked page.
+•	Metric vil komme I grafana automatisk når jeg kalder API/PUT til OpenTSDB
+•	Value:
+•	Num. Of visits during the ”time_frame””
+•	Tags:
+•	Page
+•	Node
+•	Environment
+•	Grafana:
+•	1 !!! Table panel per webserver node.
+•	endpoint tag I Grafana vil eks. Være > $tag_page og det vil give 15 rækker.
+•	Brug sort på ”Value” column.
+•	Name panel ”Most visits ”time_frame””
+•	Last hour
+•	Skal derfor KUN KUN KUN køre 1x i timen på noden.
+•	Kan LogParser sættes til at query i 1time intervaller? Kontra tid lige ”nu”. Find ud af det!?

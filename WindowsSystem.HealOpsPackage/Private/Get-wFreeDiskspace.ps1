@@ -1,7 +1,7 @@
 function Get-wFreeDiskspace() {
 <#
 .DESCRIPTION
-    Returns the freespace of each drive on the Windows system.
+    Returns the freespace of each drive on a Windows system.
 .INPUTS
     <none>
 .OUTPUTS
