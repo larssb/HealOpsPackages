@@ -51,33 +51,34 @@ function Remove-Data() {
         try {
             # Splat the parameters to be used on the Get-ChildItem cmdlet.
             $GetChildItemSplatting = @{
+                File = $true
                 Path = $Path
                 Recurse = $true
             }
             if ($PSBoundParameters.ContainsKey('Filter')) {
                 $UsingFilter = "A filter is used."
-                $GetChildItemSplatting.Add("File",$Filter) | Out-Null
+                $GetChildItemSplatting.Add("Filter",$Filter) | Out-Null
             } else {
                 $UsingFilter = "A filter is not used."
             }
-            $ItemsToDelete = Get-ChildItem @GetChildItemSplatting -ErrorAction Stop | Where-Object LastWriteTime -le ((get-date).AddDays($DaysBack)) -ErrorAction Stop
+            $ItemsToDelete = Get-ChildItem @GetChildItemSplatting -ErrorAction Stop | Where-Object LastWriteTime -le ((get-date).AddDays(-$DaysBack)) -ErrorAction Stop
         } catch {
-            throw "Failed to get items to delete. The error is > $_"
+            throw "Remove-Data | Failed to get items to delete. The error is > $_"
         }
 
         # Remove the "Identified" files.
         try {
             if ($ItemsToDelete.Count -gt 0){
                 foreach ($Item in $ItemsToDelete){
-                    $log4netLoggerDebug.Debug("Trying to delete $($Item.BaseName).")
+                    $log4netLoggerDebug.Debug("Remove-Data | Trying to delete $($Item.BaseName).")
                     Remove-Item -Path $($Item.FullName) -Force -ErrorAction Stop
                 }
             } else {
-                $log4netLoggerDebug.Debug("There was no files to remove in the folder $Path. $UsingFilter and the data query looked back $DaysBack days.")
+                $log4netLoggerDebug.Debug("Remove-Data | There was no files to remove in the folder $Path. $UsingFilter and the data query looked back $DaysBack days.")
                 $RemoveDataResult = "NoDataRemoved"
             }
         } catch {
-            throw "Failed to remove data in the folder $Path. The error is > $_"
+            throw "Remove-Data | Failed to remove data in the folder $Path. The error is > $_"
         }
         $RemoveDataResult = "DataRemoved"
     } # End of process section.

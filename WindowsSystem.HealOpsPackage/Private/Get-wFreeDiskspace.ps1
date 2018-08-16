@@ -27,19 +27,19 @@ function Get-wFreeDiskspace() {
     }
     Process {
         # Get the local drives
-        $localDrives = get-wmiobject win32_volume | Where-Object { $_.DriveType -eq 3 -and $_.SystemVolume -eq $false }
+        $LocalDrives = get-wmiobject win32_volume | Where-Object { $_.DriveType -eq 3 -and $_.SystemVolume -eq $false }
 
-        foreach ($drive in $localDrives) {
+        foreach ($Drive in $LocalDrives) {
             # Convert the space value to GB
-            $freeSpace = $drive.FreeSpace/1GB
-            $freeSpace = [System.Math]::Ceiling($freeSpace)
+            $FreeSpace = $Drive.FreeSpace/1GB
+            $FreeSpace = [System.Math]::Ceiling($FreeSpace)
 
             # Derive the driveletter
-            $driveletter = $localDrives.DriveLetter -replace ":",""
-            $driveletterDescription = ("Drive$driveletter")
+            $Driveletter = $Drive.DriveLetter -replace ":",""
+            $DriveletterDescription = ("Drive$Driveletter")
 
             # Add the freespace object to the list
-            $FreeSpaceList.Add($driveletterDescription,$freeSpace)
+            $FreeSpaceList.Add($DriveletterDescription,$FreeSpace)
         }
     }
     End{

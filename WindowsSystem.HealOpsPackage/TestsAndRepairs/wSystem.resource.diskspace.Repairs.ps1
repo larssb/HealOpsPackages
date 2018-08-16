@@ -30,12 +30,19 @@ switch ($ServerRole) {
         }
         $DefaultISLogDir = (Get-WebConfigurationProperty "/system.applicationHost/sites/siteDefaults" -name logfile.directory).Value
 
+        # Resolve potential Environment variables in the retrieved path.
+        $DefaultISLogDir = [System.Environment]::ExpandEnvironmentVariables($DefaultISLogDir)
+        Write-Verbose -Message "Determined the default IIS log dir. to be > $DefaultISLogDir"
+
         # Call Remove-Data free up diskspace
         try {
             Remove-Data -DaysBack 30 -Filter "*.log" -Path $DefaultISLogDir
         } catch {
             throw "$_"
         }
+
+        # The process was completed with no exception. The repair process was completed successfully.
+        $true
     }
     Default {
         throw "Unknown server role. Cannot continue."
