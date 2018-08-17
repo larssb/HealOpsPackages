@@ -36,7 +36,7 @@ switch ($ServerRole) {
 
         # Call Remove-Data free up diskspace
         try {
-            Remove-Data -DaysBack 30 -Filter "*.log" -Path $DefaultISLogDir
+            Remove-Data -DaysBack 30 -Filter "*.log" -Path $DefaultISLogDir | Out-Null
         } catch {
             throw "$_"
         }
