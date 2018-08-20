@@ -14,8 +14,6 @@ Describe 'Subsonic.Healthcheck' {
 
     <#
         - Test the health of the Subsonic music service
-
-        Runs on Tomcat
     #>
     It "The status of Subsonic should be ok" {
         # The subsonic health endpoint URI
