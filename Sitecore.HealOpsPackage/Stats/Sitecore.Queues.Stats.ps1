@@ -92,11 +92,11 @@ Process {
     #>
     # Fetch count on the event queue table in the [CORE] db.
     $QueryToExecute_Core = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "EventQueue" -QueryType "Count"
-    $QueryResult_Core = Invoke-DbaSqlQuery -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_Core
+    $QueryResult_Core = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_Core
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_Web = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "EventQueue" -QueryType "Count"
-    $QueryResult_Web = Invoke-DbaSqlQuery -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_Web
+    $QueryResult_Web = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_Web
 
     # Add the numbers together for summarized count.
     $EventQueue_Total = $QueryResult_Core + $QueryResult_Web
@@ -109,11 +109,11 @@ Process {
     #>
     # Fetch count on the event queue table in the [CORE] db.
     $QueryToExecute_Core = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "PublishQueue" -QueryType "Count"
-    $QueryResult_Core = Invoke-DbaSqlQuery -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_Core
+    $QueryResult_Core = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_Core
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_Web = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "PublishQueue" -QueryType "Count"
-    $QueryResult_Web = Invoke-DbaSqlQuery -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_Web
+    $QueryResult_Web = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_Web
 
     # Add the numbers together for summarized count.
     $PublishQueue_Total = $QueryResult_Core + $QueryResult_Web
@@ -136,13 +136,13 @@ Process {
     <#
         - Publish queue stats - Behind, per server
     #>
-    SELECT p.[ID]
+<#     SELECT p.[ID]
     ,p.[Key]
     ,p.[Value]
      ,(CONVERT(INT, CONVERT(NVARCHAR(100),pp.[Value])) - CONVERT(INT, CONVERT(NVARCHAR(100),p.[Value]))) as span
 FROM [DanskeSpil_Website_Core].[dbo].[Properties] p
 left outer join [DanskeSpil_Website_Core].[dbo].[Properties] pp ON pp.[key] = 'EQSTAMP_PWSCM001DLI'
-where p.[key] like 'EQSTAMP_PWS%'
+where p.[key] like 'EQSTAMP_PWS%' #>
 
     <#
 
