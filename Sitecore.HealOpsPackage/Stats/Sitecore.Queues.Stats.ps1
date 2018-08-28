@@ -31,6 +31,10 @@ Begin {
     # Website
     $WebSiteName = "DanskeSpil.Website"
 
+    # Metric to use when reporting to the time-series database.
+    $MetricEventQueueCount = "sitecore.queue.event"
+    $MetricPublishingQueueCount = "sitecore.queue.publishing"
+
     ##################
     # Database names #
     ##################
@@ -44,7 +48,7 @@ Begin {
     $WebDB_DataSrc = ($WebConnString.connectionString -split ";")[$DataSrcIdx] -replace ".+=",""
     $WebDB_Name = ($WebConnString.connectionString -split ";")[$DatabaseNameIdx] -replace ".+=",""
 
-    # Collection for holdting stats data.
+    # Collection for holding stats data.
     $Stats = @{}
 
     <#
@@ -91,35 +95,51 @@ Process {
         - Event queue stats - OVERALL
     #>
     # Fetch count on the event queue table in the [CORE] db.
-    $QueryToExecute_Core = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "EventQueue" -QueryType "Count"
-    $QueryResult_Core = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_Core
-
-    # Fetch count on the event queue table in the [WEB] db.
-    $QueryToExecute_Web = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "EventQueue" -QueryType "Count"
-    $QueryResult_Web = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_Web
-
-    # Add the numbers together for summarized count.
-    $EventQueue_Total = $QueryResult_Core + $QueryResult_Web
+    $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "EventQueue" -QueryType "Count"
+    $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
     # Add the result to the Stats hashtable.
-    $Stats.Add("EventQueueCount",$EventQueue_Total) | Out-Null
+    $Stats.Add([guid]::NewGuid(), @{
+            "Metric" = $MetricEventQueueCount
+            "StatsData" = $QueryResult_CoreDB
+        }
+    )
+
+    # Fetch count on the event queue table in the [WEB] db.
+    $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "EventQueue" -QueryType "Count"
+    $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
+
+    # Add the result to the Stats hashtable.
+    $Stats.Add([guid]::NewGuid(), @{
+            "Metric" = $MetricEventQueueCount
+            "StatsData" = $QueryResult_WebDB
+        }
+    )
 
     <#
         - Publish queue stats - OVERALL
     #>
     # Fetch count on the event queue table in the [CORE] db.
-    $QueryToExecute_Core = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "PublishQueue" -QueryType "Count"
-    $QueryResult_Core = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_Core
-
-    # Fetch count on the event queue table in the [WEB] db.
-    $QueryToExecute_Web = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "PublishQueue" -QueryType "Count"
-    $QueryResult_Web = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_Web
-
-    # Add the numbers together for summarized count.
-    $PublishQueue_Total = $QueryResult_Core + $QueryResult_Web
+    $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "PublishQueue" -QueryType "Count"
+    $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
     # Add the result to the Stats hashtable.
-    $Stats.Add("PublishQueueCount",$PublishQueue_Total) | Out-Null
+    $Stats.Add([guid]::NewGuid(), @{
+            "Metric" = $MetricPublishingQueueCount
+            "StatsData" = $QueryResult_CoreDB
+        }
+    )
+
+    # Fetch count on the event queue table in the [WEB] db.
+    $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "PublishQueue" -QueryType "Count"
+    $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
+
+    # Add the result to the Stats hashtable.
+    $Stats.Add([guid]::NewGuid(), @{
+            "Metric" = $MetricPublishingQueueCount
+            "StatsData" = $QueryResult_WebDB
+        }
+    )
 
     <#
         - Event queue stats - Per server
