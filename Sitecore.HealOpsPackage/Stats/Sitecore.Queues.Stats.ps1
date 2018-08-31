@@ -49,7 +49,7 @@ Begin {
     $WebDB_Name = ($WebConnString.connectionString -split ";")[$DatabaseNameIdx] -replace ".+=",""
 
     # Collection for holding stats data.
-    $Stats = @{}
+    $StatsCollection = Out-StatsCollectionObject
 
     <#
         - Define queries
@@ -98,23 +98,25 @@ Process {
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "EventQueue" -QueryType "Count"
     $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
-    # Add the result to the Stats hashtable.
-    $Stats.Add([guid]::NewGuid(), @{
-            "Metric" = $MetricEventQueueCount
-            "StatsData" = $QueryResult_CoreDB
-        }
-    )
+    # Get a StatsItem object and populate its properties
+    $StatsItem_CoreDB = Out-StatsItemObject
+    $StatsItem_CoreDB.Metric = "sitecore.queue.event.coredb"
+    $StatsItem_CoreDB.StatsData = $QueryResult_CoreDB
+
+    # Add the result to the Stats collection.
+    $StatsCollection.Add($StatsItem_CoreDB)
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "EventQueue" -QueryType "Count"
     $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
 
-    # Add the result to the Stats hashtable.
-    $Stats.Add([guid]::NewGuid(), @{
-            "Metric" = $MetricEventQueueCount
-            "StatsData" = $QueryResult_WebDB
-        }
-    )
+    # Get a StatsItem object and populate its properties
+    $StatsItem_WebDB = Out-StatsItemObject
+    $StatsItem_WebDB.Metric = "sitecore.queue.event.webdb"
+    $StatsItem_WebDB.StatsData = $QueryResult_CoreDB
+
+    # Add the result to the Stats collection.
+    $StatsCollection.Add($StatsItem_WebDB)
 
     <#
         - Publish queue stats - OVERALL
@@ -123,23 +125,25 @@ Process {
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "PublishQueue" -QueryType "Count"
     $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
-    # Add the result to the Stats hashtable.
-    $Stats.Add([guid]::NewGuid(), @{
-            "Metric" = $MetricPublishingQueueCount
-            "StatsData" = $QueryResult_CoreDB
-        }
-    )
+    # Get a StatsItem object and populate its properties
+    $StatsItem_CoreDB = Out-StatsItemObject
+    $StatsItem_CoreDB.Metric = "sitecore.queue.publishing.coredb"
+    $StatsItem_CoreDB.StatsData = $QueryResult_CoreDB
+
+    # Add the result to the Stats collection.
+    $StatsCollection.Add($StatsItem_CoreDB)
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "PublishQueue" -QueryType "Count"
     $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
 
-    # Add the result to the Stats hashtable.
-    $Stats.Add([guid]::NewGuid(), @{
-            "Metric" = $MetricPublishingQueueCount
-            "StatsData" = $QueryResult_WebDB
-        }
-    )
+    # Get a StatsItem object and populate its properties
+    $StatsItem_WebDB = Out-StatsItemObject
+    $StatsItem_WebDB.Metric = "sitecore.queue.publishing.webdb"
+    $StatsItem_WebDB.StatsData = $QueryResult_CoreDB
+
+    # Add the result to the Stats collection.
+    $StatsCollection.Add($StatsItem_WebDB)
 
     <#
         - Event queue stats - Per server
@@ -170,5 +174,5 @@ where p.[key] like 'EQSTAMP_PWS%' #>
 }
 End {
     # Return the gathered stats to caller.
-    $Stats
+    $StatsCollection
 }
