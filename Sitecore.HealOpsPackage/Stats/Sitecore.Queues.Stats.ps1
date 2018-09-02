@@ -31,10 +31,6 @@ Begin {
     # Website
     $WebSiteName = "DanskeSpil.Website"
 
-    # Metric to use when reporting to the time-series database.
-    $MetricEventQueueCount = "sitecore.queue.event"
-    $MetricPublishingQueueCount = "sitecore.queue.publishing"
-
     ##################
     # Database names #
     ##################
@@ -101,7 +97,9 @@ Process {
     # Get a StatsItem object and populate its properties
     $StatsItem_CoreDB = Out-StatsItemObject
     $StatsItem_CoreDB.Metric = "sitecore.queue.event.coredb"
-    $StatsItem_CoreDB.StatsData = $QueryResult_CoreDB
+    $StatsItem_CoreDB.StatsData = @{
+        "Count" = $QueryResult_CoreDB
+    }
 
     # Add the result to the Stats collection.
     $StatsCollection.Add($StatsItem_CoreDB)
@@ -113,7 +111,9 @@ Process {
     # Get a StatsItem object and populate its properties
     $StatsItem_WebDB = Out-StatsItemObject
     $StatsItem_WebDB.Metric = "sitecore.queue.event.webdb"
-    $StatsItem_WebDB.StatsData = $QueryResult_CoreDB
+    $StatsItem_WebDB.StatsData = @{
+        "Count" = $QueryResult_WebDB
+    }
 
     # Add the result to the Stats collection.
     $StatsCollection.Add($StatsItem_WebDB)
@@ -128,7 +128,9 @@ Process {
     # Get a StatsItem object and populate its properties
     $StatsItem_CoreDB = Out-StatsItemObject
     $StatsItem_CoreDB.Metric = "sitecore.queue.publishing.coredb"
-    $StatsItem_CoreDB.StatsData = $QueryResult_CoreDB
+    $StatsItem_CoreDB.StatsData = @{
+        "Count" = $QueryResult_CoreDB
+    }
 
     # Add the result to the Stats collection.
     $StatsCollection.Add($StatsItem_CoreDB)
@@ -140,7 +142,9 @@ Process {
     # Get a StatsItem object and populate its properties
     $StatsItem_WebDB = Out-StatsItemObject
     $StatsItem_WebDB.Metric = "sitecore.queue.publishing.webdb"
-    $StatsItem_WebDB.StatsData = $QueryResult_CoreDB
+    $StatsItem_WebDB.StatsData = @{
+        "Count" = $QueryResult_CoreDB
+    }
 
     # Add the result to the Stats collection.
     $StatsCollection.Add($StatsItem_WebDB)
