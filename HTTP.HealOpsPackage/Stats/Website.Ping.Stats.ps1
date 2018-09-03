@@ -4,9 +4,10 @@
 .INPUTS
     <none>
 .OUTPUTS
-    [VOID] to follow the PowerShell convention of specifying [Void] if the return type is not known by the type system.
+    A [System.Collections.Generic.List`1[StatsItem]] type collection, containing the [StatsItem]'s the function collected.
 .NOTES
-    <none>
+    Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
+    As the output type [System.Collections.Generic.List`1[StatsItem]] would not be known by PowerShell, when this function is invocated.
 .EXAMPLE
     PS C:\> . ./Website.Ping.Stats.ps1
     Executes the file.
@@ -15,11 +16,7 @@
 # Define parameters
 [CmdletBinding(DefaultParameterSetName = "Default")]
 [OutputType([Void])]
-Param(
-    [Parameter(Mandatory)]
-    [ValidateNotNullOrEmpty()]
-    $NAMEOFPARAMETER
-)
+Param()
 
 #############
 # Execution #

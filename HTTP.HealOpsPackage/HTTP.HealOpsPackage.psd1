@@ -1,13 +1,7 @@
 @{
 
-    # Script module or binary module file associated with this manifest.
-    # RootModule = ''
-
     # Version number of this module.
     ModuleVersion = '1.0.0'
-
-    # Supported PSEditions
-    # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
     GUID = 'd1b04f62-83c7-453b-8f10-ed87de946d8a'
@@ -15,11 +9,8 @@
     # Author of this module
     Author = 'Lars Bengtsson | larssb on GitHub'
 
-    # Company or vendor of this module
-    CompanyName = 'Unknown'
-
     # Copyright statement for this module
-    Copyright = '(c) Lars Bengtsson | larssb on GitHub. All rights reserved.'
+    Copyright = '(C) Lars Bengtsson | larssb on GitHub. All rights reserved.'
 
     # Description of the functionality provided by this module
     Description = 'Tests and repairs HTTP endpoints of varying kind.'
@@ -64,11 +55,4 @@
         } # End of PSData hashtable
 
     } # End of PrivateData hashtable
-
-    # HelpInfo URI of this module
-    # HelpInfoURI = ''
-
-    # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
-    # DefaultCommandPrefix = ''
-
 }

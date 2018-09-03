@@ -2,11 +2,12 @@
 .DESCRIPTION
     An implicit function that gathers statistics on the queues of a Sitecore installation.
 .INPUTS
-    Inputs (if any)
-.OUTPUTS
-    [Hashtable]Stats. This collection contains the gathered Sitecore queue stas.
-.NOTES
     <none>
+.OUTPUTS
+    A [System.Collections.Generic.List`1[StatsItem]] type collection, containing the [StatsItem]'s the function collected.
+.NOTES
+    Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
+    As the output type [System.Collections.Generic.List`1[StatsItem]] would not be known by PowerShell, when this function is invocated.
 .EXAMPLE
     PS C:\> . ./Sitecore.Queues.Stats
     Executes Sitecore.Queues.Stats which will run through and try to gather stats data on the Sitecore queues.
@@ -14,7 +15,7 @@
 
 # Define parameters
 [CmdletBinding(DefaultParameterSetName = "Default")]
-[OutputType([Hashtable])]
+[OutputType([Void])]
 Param()
 
 #############
