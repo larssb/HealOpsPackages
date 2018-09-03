@@ -143,7 +143,7 @@ Process {
     $StatsItem_WebDB = Out-StatsItemObject
     $StatsItem_WebDB.Metric = "sitecore.queue.publishing.webdb"
     $StatsItem_WebDB.StatsData = @{
-        "Count" = $QueryResult_CoreDB
+        "Count" = $QueryResult_WebDB
     }
 
     # Add the result to the Stats collection.
