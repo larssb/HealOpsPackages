@@ -179,5 +179,5 @@ where p.[key] like 'EQSTAMP_PWS%' #>
 }
 End {
     # Return the gathered stats to caller.
-    $StatsCollection
+    ,$StatsCollection
 }
