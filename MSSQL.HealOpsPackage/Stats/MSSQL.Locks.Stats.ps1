@@ -34,14 +34,14 @@ Process {
     <#
         - YOUR_COMMENT
     #>
-    # YOUR_CODE
+    # Gather locks info on the instance level.
     [Array]$QueryResult = Invoke-DbaSqlQuery -Database "DevOpsTools" -SqlInstance "10.93.1.15" -Query "exec sp_WhoIsActive"
 
     # Get a StatsItem object and populate its properties
     $StatsItem = Out-StatsItemObject
     $StatsItem.Metric = "mssql.instance.locks"
     $StatsItem.StatsData = @{
-        "Count" = $QueryResult.Count
+        "Value" = $QueryResult.Count
     }
 
     # Add the result to the Stats collection.

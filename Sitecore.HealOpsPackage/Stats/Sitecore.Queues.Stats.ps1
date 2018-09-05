@@ -32,6 +32,10 @@ Begin {
     # Website
     $WebSiteName = "DanskeSpil.Website"
 
+    # SQL infrastructure
+    $CMServer = ""
+    $QueueBehind_Query_SrvMatch = ""
+
     ##################
     # Database names #
     ##################
@@ -63,7 +67,7 @@ Begin {
             [ValidateNotNullOrEmpty()]
             [String]$TableName,
             [Parameter(Mandatory)]
-            [ValidateSet('Count','')]
+            [ValidateSet('Count','QueueBehind')]
             [String]$QueryType
         )
 
@@ -76,8 +80,11 @@ Begin {
                 'Count' {
                     [String]$Query = "SELECT count(*) FROM [$DBName].[dbo].[$TableName]"
                 }
-                '' {
-
+                'QueueBehind' {
+                    [String]$Query = "SELECT p.[ID], p.[Key], p.[Value], (CONVERT(INT, CONVERT(NVARCHAR(100),pp.[Value])) - CONVERT(INT, CONVERT(NVARCHAR(100),p.[Value]))) as secsbehind
+                    FROM [$DBName].[dbo].[$TableName] p
+                    left outer join [$DBName].[dbo].[$TableName] pp ON pp.[key] = 'EQSTAMP_$CMServer'
+                    where p.[key] like 'EQSTAMP_$QueueBehind_Query_SrvMatch%'"
                 }
             }
         }
@@ -99,7 +106,7 @@ Process {
     $StatsItem_CoreDB = Out-StatsItemObject
     $StatsItem_CoreDB.Metric = "sitecore.queue.event.coredb"
     $StatsItem_CoreDB.StatsData = @{
-        "Count" = $QueryResult_CoreDB
+        "Value" = $QueryResult_CoreDB
     }
 
     # Add the result to the Stats collection.
@@ -113,7 +120,7 @@ Process {
     $StatsItem_WebDB = Out-StatsItemObject
     $StatsItem_WebDB.Metric = "sitecore.queue.event.webdb"
     $StatsItem_WebDB.StatsData = @{
-        "Count" = $QueryResult_WebDB
+        "Value" = $QueryResult_WebDB
     }
 
     # Add the result to the Stats collection.
@@ -130,7 +137,7 @@ Process {
     $StatsItem_CoreDB = Out-StatsItemObject
     $StatsItem_CoreDB.Metric = "sitecore.queue.publishing.coredb"
     $StatsItem_CoreDB.StatsData = @{
-        "Count" = $QueryResult_CoreDB
+        "Value" = $QueryResult_CoreDB
     }
 
     # Add the result to the Stats collection.
@@ -144,38 +151,33 @@ Process {
     $StatsItem_WebDB = Out-StatsItemObject
     $StatsItem_WebDB.Metric = "sitecore.queue.publishing.webdb"
     $StatsItem_WebDB.StatsData = @{
-        "Count" = $QueryResult_WebDB
+        "Value" = $QueryResult_WebDB
     }
 
     # Add the result to the Stats collection.
     $StatsCollection.Add($StatsItem_WebDB)
 
     <#
-        - Event queue stats - Per server
+        - Queue - Behind, per server, on CORE DB.
     #>
+    $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "Properties" -QueryType "QueueBehind"
+    $QueryResult_CoreDB = Invoke-DbaSqlQuery -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
-    <#
-        - Publish queue stats - Per server
-    #>
+    foreach ($Row in $QueryResult_CoreDB) {
+        $StatsOwner = ($Row.Key -Split "_")[1]
+        if (-not ($StatsOwner -match "CM")) {
+            # Get a StatsItem object and populate its properties
+            $StatsItem_CoreDB = Out-StatsItemObject -IncludeStatsOwnerProperty
+            $StatsItem_CoreDB.Metric = "sitecore.queuebehind.coredb"
+            $StatsItem_CoreDB.StatsData = @{
+                "Value" = $Row.secsbehind
+            }
+            $StatsItem_CoreDB.StatsOwner = $StatsOwner
 
-    <#
-        - Event queue stats - Behind, per server
-    #>
-
-    <#
-        - Publish queue stats - Behind, per server
-    #>
-<#     SELECT p.[ID]
-    ,p.[Key]
-    ,p.[Value]
-     ,(CONVERT(INT, CONVERT(NVARCHAR(100),pp.[Value])) - CONVERT(INT, CONVERT(NVARCHAR(100),p.[Value]))) as span
-FROM [DanskeSpil_Website_Core].[dbo].[Properties] p
-left outer join [DanskeSpil_Website_Core].[dbo].[Properties] pp ON pp.[key] = 'EQSTAMP_PWSCM001DLI'
-where p.[key] like 'EQSTAMP_PWS%' #>
-
-    <#
-
-    #>
+            # Add the result to the Stats collection.
+            $StatsCollection.Add($StatsItem_CoreDB)
+        } # End of conditional control, ensuring that we only get the metric on Sitecore CD/frontend servers.
+    }
 }
 End {
     # Return the gathered stats to caller.
