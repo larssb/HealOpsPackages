@@ -1,5 +1,5 @@
 {
-    "environment": "Vegas.dk",
+    "environment": "INSERT_ENVIRONMENT_HERE",
     "wSystem.resource.diskspace.Tests": {
         "jobInterval": 5
     }

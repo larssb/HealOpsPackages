@@ -4,10 +4,10 @@
 .INPUTS
     <none>
 .OUTPUTS
-    A [System.Collections.Generic.List`1[StatsItem]] type collection, containing the [StatsItem]'s the function collected.
+    A [System.Collections.Generic.List`1[MetricItem]] type collection, containing the [MetricItem]'s the function collected.
 .NOTES
     Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
-    As the output type [System.Collections.Generic.List`1[StatsItem]] would not be known by PowerShell, when this function is invocated.
+    As the output type [System.Collections.Generic.List`1[MetricItem]] would not be known by PowerShell, when this function is invocated.
 .EXAMPLE
     PS C:\> . ./Sitecore.Queues.Stats
     Executes Sitecore.Queues.Stats which will run through and try to gather stats data on the Sitecore queues.
@@ -50,7 +50,7 @@ Begin {
     $WebDB_Name = ($WebConnString.connectionString -split ";")[$DatabaseNameIdx] -replace ".+=",""
 
     # Collection for holding stats data.
-    $StatsCollection = Out-StatsCollectionObject
+    $MetricsCollection = Out-MetricsCollectionObject
 
     <#
         - Define queries
@@ -102,29 +102,29 @@ Process {
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "EventQueue" -QueryType "Count"
     $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
-    # Get a StatsItem object and populate its properties
-    $StatsItem_CoreDB = Out-StatsItemObject
-    $StatsItem_CoreDB.Metric = "sitecore.queue.event.coredb"
-    $StatsItem_CoreDB.StatsData = @{
+    # Get a MetricItem object and populate its properties
+    $MetricItem_CoreDB = Out-MetricItemObject
+    $MetricItem_CoreDB.Metric = "sitecore.queue.event.coredb"
+    $MetricItem_CoreDB.MetricData = @{
         "Value" = $QueryResult_CoreDB
     }
 
     # Add the result to the Stats collection.
-    $StatsCollection.Add($StatsItem_CoreDB)
+    $MetricsCollection.Add($MetricItem_CoreDB)
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "EventQueue" -QueryType "Count"
     $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
 
-    # Get a StatsItem object and populate its properties
-    $StatsItem_WebDB = Out-StatsItemObject
-    $StatsItem_WebDB.Metric = "sitecore.queue.event.webdb"
-    $StatsItem_WebDB.StatsData = @{
+    # Get a MetricItem object and populate its properties
+    $MetricItem_WebDB = Out-MetricItemObject
+    $MetricItem_WebDB.Metric = "sitecore.queue.event.webdb"
+    $MetricItem_WebDB.MetricData = @{
         "Value" = $QueryResult_WebDB
     }
 
     # Add the result to the Stats collection.
-    $StatsCollection.Add($StatsItem_WebDB)
+    $MetricsCollection.Add($MetricItem_WebDB)
 
     <#
         - Publish queue stats - OVERALL
@@ -133,29 +133,29 @@ Process {
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "PublishQueue" -QueryType "Count"
     $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
-    # Get a StatsItem object and populate its properties
-    $StatsItem_CoreDB = Out-StatsItemObject
-    $StatsItem_CoreDB.Metric = "sitecore.queue.publishing.coredb"
-    $StatsItem_CoreDB.StatsData = @{
+    # Get a MetricItem object and populate its properties
+    $MetricItem_CoreDB = Out-MetricItemObject
+    $MetricItem_CoreDB.Metric = "sitecore.queue.publishing.coredb"
+    $MetricItem_CoreDB.MetricData = @{
         "Value" = $QueryResult_CoreDB
     }
 
     # Add the result to the Stats collection.
-    $StatsCollection.Add($StatsItem_CoreDB)
+    $MetricsCollection.Add($MetricItem_CoreDB)
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "PublishQueue" -QueryType "Count"
     $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
 
-    # Get a StatsItem object and populate its properties
-    $StatsItem_WebDB = Out-StatsItemObject
-    $StatsItem_WebDB.Metric = "sitecore.queue.publishing.webdb"
-    $StatsItem_WebDB.StatsData = @{
+    # Get a MetricItem object and populate its properties
+    $MetricItem_WebDB = Out-MetricItemObject
+    $MetricItem_WebDB.Metric = "sitecore.queue.publishing.webdb"
+    $MetricItem_WebDB.MetricData = @{
         "Value" = $QueryResult_WebDB
     }
 
     # Add the result to the Stats collection.
-    $StatsCollection.Add($StatsItem_WebDB)
+    $MetricsCollection.Add($MetricItem_WebDB)
 
     <#
         - Queue - Behind, per server, on CORE DB.
@@ -166,20 +166,20 @@ Process {
     foreach ($Row in $QueryResult_CoreDB) {
         $StatsOwner = ($Row.Key -Split "_")[1]
         if (-not ($StatsOwner -match "CM")) {
-            # Get a StatsItem object and populate its properties
-            $StatsItem_CoreDB = Out-StatsItemObject -IncludeStatsOwnerProperty
-            $StatsItem_CoreDB.Metric = "sitecore.queuebehind.coredb"
-            $StatsItem_CoreDB.StatsData = @{
+            # Get a MetricItem object and populate its properties
+            $MetricItem_CoreDB = Out-MetricItemObject -IncludeStatsOwnerProperty
+            $MetricItem_CoreDB.Metric = "sitecore.queuebehind.coredb"
+            $MetricItem_CoreDB.MetricData = @{
                 "Value" = $Row.secsbehind
             }
-            $StatsItem_CoreDB.StatsOwner = $StatsOwner
+            $MetricItem_CoreDB.StatsOwner = $StatsOwner
 
             # Add the result to the Stats collection.
-            $StatsCollection.Add($StatsItem_CoreDB)
+            $MetricsCollection.Add($MetricItem_CoreDB)
         } # End of conditional control, ensuring that we only get the metric on Sitecore CD/frontend servers.
     }
 }
 End {
     # Return the gathered stats to caller.
-    ,$StatsCollection
+    ,$MetricsCollection
 }

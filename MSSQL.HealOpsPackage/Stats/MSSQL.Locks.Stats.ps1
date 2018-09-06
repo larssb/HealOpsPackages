@@ -4,10 +4,10 @@
 .INPUTS
     <none>
 .OUTPUTS
-    A [System.Collections.Generic.List`1[StatsItem]] type collection, containing the [StatsItem]'s the function collected.
+    A [System.Collections.Generic.List`1[MetricItem]] type collection, containing the [MetricItem]'s the function collected.
 .NOTES
     Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
-    As the output type [System.Collections.Generic.List`1[StatsItem]] would not be known by PowerShell, when this function is invocated.
+    As the output type [System.Collections.Generic.List`1[MetricItem]] would not be known by PowerShell, when this function is invocated.
 .EXAMPLE
     PS C:\> USAGE_EXAMPLE
     EXPLAIN_THE_EXAMPLE
@@ -28,7 +28,7 @@ Begin {
     # YOUR_COMMENT
 
     # Initiate a collection to hold stats data.
-    $StatsCollection = Out-StatsCollectionObject
+    $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
     <#
@@ -37,17 +37,17 @@ Process {
     # Gather locks info on the instance level.
     [Array]$QueryResult = Invoke-DbaSqlQuery -Database "DevOpsTools" -SqlInstance "10.93.1.15" -Query "exec sp_WhoIsActive"
 
-    # Get a StatsItem object and populate its properties
-    $StatsItem = Out-StatsItemObject
-    $StatsItem.Metric = "mssql.instance.locks"
-    $StatsItem.StatsData = @{
+    # Get a MetricItem object and populate its properties
+    $MetricItem = Out-MetricItemObject
+    $MetricItem.Metric = "mssql.instance.locks"
+    $MetricItem.MetricData = @{
         "Value" = $QueryResult.Count
     }
 
     # Add the result to the Stats collection.
-    $StatsCollection.Add($StatsItem)
+    $MetricsCollection.Add($MetricItem)
 }
 End {
     # Return the gathered stats to caller.
-    ,$StatsCollection
+    ,$MetricsCollection
 }

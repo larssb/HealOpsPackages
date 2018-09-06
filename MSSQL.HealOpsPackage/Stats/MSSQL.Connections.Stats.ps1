@@ -1,16 +1,16 @@
 <#
 .DESCRIPTION
-    LONG_DESCRIPTION
+    Gathers connection stats on an MSSQL instance. Per database.
 .INPUTS
     <none>
 .OUTPUTS
-    A [System.Collections.Generic.List`1[StatsItem]] type collection, containing the [StatsItem]'s the function collected.
+    A [System.Collections.Generic.List`1[MetricItem]] type collection, containing the [MetricItem]'s the function collected.
 .NOTES
     Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
-    As the output type [System.Collections.Generic.List`1[StatsItem]] would not be known by PowerShell, when this function is invocated.
+    As the output type [System.Collections.Generic.List`1[MetricItem]] would not be known by PowerShell, when this function is invocated.
 .EXAMPLE
-    PS C:\> USAGE_EXAMPLE
-    EXPLAIN_THE_EXAMPLE
+    PS C:\> . ./MSSQL.Connections.Stats
+    Executes the MSSQL.Connections.Stats file.
 #>
 
 # Define parameters
@@ -41,7 +41,7 @@ Begin {
     $MSSQLInstance = "10.93.1.15"
 
     # Initiate a collection to hold stats data.
-    $StatsCollection = Out-StatsCollectionObject
+    $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
     <#
@@ -61,21 +61,21 @@ Process {
 
         # Gather connection count per server.
         foreach ($Item in $QueryResult) {
-            # Get a StatsItem object and populate its properties
-            $StatsItem = Out-StatsItemObject -IncludeStatsOwnerProperty
-            $StatsItem.Metric = "mssql.database.connections"
-            $StatsItem.StatsData = @{
+            # Get a MetricItem object and populate its properties
+            $MetricItem = Out-MetricItemObject -IncludeStatsOwnerProperty
+            $MetricItem.Metric = "mssql.database.connections"
+            $MetricItem.MetricData = @{
                 "Database" = $Database
                 "Value" = $Item.Connections
             }
-            $StatsItem.StatsOwner = $Item.HostName.Trim()
+            $MetricItem.StatsOwner = $Item.HostName.Trim()
 
             # Add the result to the Stats collection.
-            $StatsCollection.Add($StatsItem)
+            $MetricsCollection.Add($MetricItem)
         }
     } # End of foreach on the databases in $Databases
 }
 End {
     # Return the gathered stats to caller.
-    ,$StatsCollection
+    ,$MetricsCollection
 }

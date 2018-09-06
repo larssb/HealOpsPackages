@@ -1,6 +1,9 @@
 # Import the Get-wFreeDiskspace function
 . $PSScriptRoot/../Private/Get-wFreeDiskspace.ps1
 
+# Retrieve a collection for storing Metrics
+$MetricsCollection = Out-MetricsCollectionObject
+
 Describe "wsystem.resource.diskspace" {
     <#
         - Tests that there is more than 10GB left on all drives on the system
@@ -17,20 +20,35 @@ Describe "wsystem.resource.diskspace" {
 
             if($freeSpaceTest -eq $false) {
                 # We need to alert / remediate
-                $result = $false
+                $Result = $false
 
                 # Break as there is no need to continue iterating. A problem was found.
                 break
             } else {
-                $result = $true
+                $Result = $true
             }
         }
 
-        # Set global report variables
-        [HashTable]$global:passedTestResult = $freespace
-        [HashTable]$global:failedTestResult = $freespace
+        # Store the metrics
+        $enumerator = $freespace.GetEnumerator()
+        foreach ($entry in $enumerator) {
+            # Get a MetricItem
+            $MetricItem = Out-MetricItemObject
+            $MetricItem.Metric = "wsystem.resource.diskspace"
+            $MetricItem.MetricData = @{
+                "Drive" = $entry.Key
+                "Value" = $entry.Value
+            }
 
-        # Determine the result of the test
-        $result | Should Be $true
+            # Add the metric to the MetricsCollection
+            $MetricsCollection.Add($MetricItem)
+        }
+
+        # Set global report variables
+        $global:passedTestResult = $MetricsCollection
+        $global:failedTestResult = $MetricsCollection
+
+        # Determine the Result of the test
+        $Result | Should Be $true
     }
 }
