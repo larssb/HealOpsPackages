@@ -247,7 +247,7 @@
 			"\t}",
 			"\r",
 			"\t# Add the result to the Stats collection.",
-			"\t\\$MetricsCollection.Add($MetricItem)",
+			"\t\\$MetricsCollection.Add(\\$MetricItem)",
 			"}",
 			"End {",
 			"\t# Return the gathered stats to caller.",
