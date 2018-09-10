@@ -1,5 +1,4 @@
 @{
-
     # Script module or binary module file associated with this manifest.
     RootModule = 'WindowsSystem.HealOpsPackage'
 
@@ -10,7 +9,7 @@
     GUID = 'e8deda18-a932-469c-8e46-2b57e02d4103'
 
     # Author of this module
-    Author = 'Lars Bengtsson | https://github.com/larssb'
+    Author = 'Lars S. Bengtsson | https://github.com/larssb | https://bengtssondd.it'
 
     # Copyright statement for this module
     Copyright = '(c) Lars Bengtsson. All rights reserved.'

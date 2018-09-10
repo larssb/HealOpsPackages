@@ -12,25 +12,19 @@ param(
 #############
 Write-Verbose -Message "Trying to remediate the Octopus Deploy tentacle as it was in a failed state"
 
-# Parse the incoming test data to determine what remediating effort to try
-if($TestData.FailureMessage -eq 503) {
-    # Service unavailable. Let's try a service restart
-    $svc = Get-Service -Name "OctopusDeploy Tentacle"
-    if($null -ne $svc) {
-        try {
-            Start-Service $svc
-
-            $remediationResult = $true
-        } catch {
-            Write-Output "Failed to start the Octopus Deploy service. Failed with: $_"
-
-            $remediationResult = $false
-        }
-    } else {
-        # Report that the server is missing on the node.
-        $remediationResult = $false
+# Service unavailable. Let's try a service restart
+$svc = Get-Service -Name "OctopusDeploy Tentacle"
+if($null -ne $svc) {
+    try {
+        Start-Service  $svc
+        $RemediationResult = $true
+    } catch {
+        Write-Output "Failed to start the Octopus Deploy service. Failed with: $_"
+        $RemediationResult = $false
     }
-
-    # Return to caller
-    $remediationResult
+} else {
+    $RemediationResult = $false
 }
+
+# Return to caller
+$RemediationResult

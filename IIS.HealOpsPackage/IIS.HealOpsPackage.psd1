@@ -1,6 +1,6 @@
 @{
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.0.1'
 
     # ID used to uniquely identify this module
     GUID = 'c19f2805-b7a2-4328-bcad-d15cab4ca90d'
@@ -12,7 +12,7 @@
     #CompanyName = 'Unknown'
 
     # Copyright statement for this module
-    Copyright = '(C) 2018 Lars Bengtsson. All rights reserved.'
+    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under Apache 2.0 License.'
 
     # Description of the functionality provided by this module
     Description = 'A package for testing, monitoring and providing stats on a Microsoft IIS Webserver.'

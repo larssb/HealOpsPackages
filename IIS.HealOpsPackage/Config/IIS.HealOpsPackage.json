@@ -1,0 +1,9 @@
+{
+    "environment": "INSERT_ENVIRONMENT_HERE",
+    "iis.performance.Tests": {
+        "jobInterval": 5
+    },
+    "Requests.Website.Stats": {
+        "jobInterval": 1
+    }
+}

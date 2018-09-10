@@ -26,19 +26,10 @@ Begin {
         - Declare variables, that will be re-used throughout the script.
     #>
     # Set of databases
-    $Databases = @(
-        "Town36_DanskeSpil_Website_Core"
-        "Town36_DanskeSpil_Website_Data"
-        "Town36_DanskeSpil_Website_Master"
-        "Town36_DanskeSpil_Website_Sessions"
-        "Town36_DanskeSpil_Website_SharedSessions"
-        "Town36_DanskeSpil_Website_Web"
-        "Town36_DanskeSpil_Website_Analytics"
-        "Town36_DanskeSpil_Website_Analytics_Secondary"
-    )
+    $Databases = @()
 
     # MSSQL instance
-    $MSSQLInstance = "10.93.1.15"
+    $MSSQLInstance = ""
 
     # Initiate a collection to hold stats data.
     $MetricsCollection = Out-MetricsCollectionObject

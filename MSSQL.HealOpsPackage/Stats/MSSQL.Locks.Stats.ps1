@@ -1,6 +1,6 @@
 <#
 .DESCRIPTION
-    LONG_DESCRIPTION
+    Counts the number of locks at a MSSQL instance level.
 .INPUTS
     <none>
 .OUTPUTS
@@ -9,8 +9,8 @@
     Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
     As the output type [System.Collections.Generic.List`1[MetricItem]] would not be known by PowerShell, when this function is invocated.
 .EXAMPLE
-    PS C:\> USAGE_EXAMPLE
-    EXPLAIN_THE_EXAMPLE
+    PS C:\> . ./MSSQL.Locks.Stats.ps1
+    Executes this Stats file.
 #>
 
 # Define parameters
@@ -25,23 +25,27 @@ Begin {
     <#
         - Declare variables, that will be re-used throughout the script.
     #>
-    # YOUR_COMMENT
+    $MSSQLInstance = ""
 
     # Initiate a collection to hold stats data.
     $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
-    <#
-        - YOUR_COMMENT
-    #>
     # Gather locks info on the instance level.
-    [Array]$QueryResult = Invoke-DbaSqlQuery -Database "DevOpsTools" -SqlInstance "10.93.1.15" -Query "exec sp_WhoIsActive"
+    [Array]$QueryResult = Invoke-DbaSqlQuery -Database "DevOpsTools" -SqlInstance $MSSQLInstance -Query "exec sp_WhoIsActive"
+
+    [Int32]$LockCount = 0
+    foreach ($item in $QueryResult) {
+        if ($item.blocking_session_id.GetType().Name -ne "DBNull") {
+            $LockCount++
+        }
+    }
 
     # Get a MetricItem object and populate its properties
     $MetricItem = Out-MetricItemObject
     $MetricItem.Metric = "mssql.instance.locks"
     $MetricItem.MetricData = @{
-        "Value" = $QueryResult.Count
+        "Value" = $LockCount
     }
 
     # Add the result to the Stats collection.

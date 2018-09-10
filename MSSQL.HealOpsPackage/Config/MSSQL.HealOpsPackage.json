@@ -1,6 +1,9 @@
 {
     "environment": "INSERT_ENVIRONMENT_HERE",
-    "test.name": {
-        "jobInterval": "NUMBER_REPRESENTING_THE_JOB_REPETITION_INTERVAL"
+    "MSSQL.Connections.Stats": {
+        "jobInterval": 1
+    },
+    "MSSQL.Locks.Stats": {
+        "jobInterval": 1
     }
 }

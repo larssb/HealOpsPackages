@@ -1,3 +1,4 @@
+#Requires -Modules WebAdminiStration
 <#
 .DESCRIPTION
     Counts the number of [ERROR] lines in the Sitecore log. This can be a good indicator to watch in regards to the health of a Sitecore instance.
@@ -8,6 +9,8 @@
 .NOTES
     Set to output [Void] in order to comply with the PowerShell language. Also if [Void] wasn't used, an error would be thrown when invoking the function.
     As the output type [System.Collections.Generic.List`1[MetricItem]] would not be known by PowerShell, when this function is invocated.
+
+    Requires the WebAdminiStration module via a local 'Requires' clause as the WebAdministration module cannot be published with the Publish-Module cmdlet because pf some missing metadata.
 .EXAMPLE
     PS C:\> ./Sitecore.log.Stats.ps1
     Execute this Stats file.

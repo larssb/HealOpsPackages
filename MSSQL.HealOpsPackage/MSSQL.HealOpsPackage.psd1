@@ -1,6 +1,6 @@
 @{
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.0.1'
 
     # ID used to uniquely identify this module
     GUID = '347bd6e8-3362-424b-9697-e98a0ac46106'
@@ -9,13 +9,15 @@
     Author = 'Lars Bengtsson | https://github.com/larssb | https://bengtssondd.it'
 
     # Copyright statement for this module
-    Copyright = '(c) 2018 Lars Bengtsson. All rights reserved.'
+    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under Apache 2.0 License.'
 
     # Description of the functionality provided by this module
     Description = 'This HealOpsPackage contains tests, repairs and stats files for monitoring, repairing and gathering stats on MSSQL server infrastructure- and instances. '
 
     # Modules that must be imported into the global environment prior to importing this module
-    # RequiredModules = @()
+    RequiredModules = @(
+        "dbatools"
+    )
 
     # Assemblies that must be loaded prior to importing this module
     # RequiredAssemblies = @()

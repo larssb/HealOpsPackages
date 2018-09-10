@@ -1,3 +1,6 @@
+# Retrieve a collection for storing Metrics
+$MetricsCollection = Out-MetricsCollectionObject
+
 Describe "octopusdeploy.tentacle" {
     <#
         - Test that the Octopus Deploy tentacle agent is running
@@ -40,26 +43,42 @@ Describe "octopusdeploy.tentacle" {
 "@
 
         # Request the Octopus Deploy Tentacle endpoint
-        add-type $definition;
-        [SSLValidator]::OverrideValidation();
+        Add-Type $definition
+        [SSLValidator]::OverrideValidation()
         try {
-            $request = Invoke-WebRequest -Uri $octopusDeployTentacleURI -Method Get -UseBasicParsing;
+            $Request = Invoke-WebRequest -Uri $octopusDeployTentacleURI -Method Get -UseBasicParsing
         } catch {
             write-verbose -Message "The Octopus Deploy webrequest call failed. The error was > $_"
-
-            $testException = $_
+            $TestException = $_
         }
-        [SSLValidator]::RestoreValidation();
+        [SSLValidator]::RestoreValidation()
 
         # Test if the request came through at all
-        if($testException) {
+        if($TestException) {
             # The request did not come through. Reasoning > the endpoint is not available therefore HTTP503
-            $testException = 503
+            $Value = 503
+        } else {
+            $Value = $Request.StatusCode
         }
-        $testException | Should Not Be 503
 
-        # Determine the result of a successfull invoke-webrequest try
-        $global:assertionResult = $request.StatusCode
-        $request.StatusCode | Should Be 200
+        # Get a MetricItem
+        $MetricItem = Out-MetricItemObject
+        $MetricItem.Metric = "octopusdeploy.tentacle.status"
+        $MetricItem.MetricData = @{
+            "Value" = $Value
+        }
+
+        # Add the metric to the MetricsCollection
+        $MetricsCollection.Add($MetricItem)
+
+        # Set global report variables
+        $global:passedTestResult = $MetricsCollection
+        $global:failedTestResult = $MetricsCollection
+
+        <#
+            - ASSERT
+        #>
+        $Value | Should Not Be 503
+        $Value | Should Be 200
     }
 }
