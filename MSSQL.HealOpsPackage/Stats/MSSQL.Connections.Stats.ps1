@@ -30,17 +30,17 @@ Begin {
 
     # MSSQL instance
     $MSSQLInstance = ""
+    $MSSQLUser = ""
+    $MSSQLPassword = ConvertTo-SecureString -String "" -AsPlainText -Force
+    $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $MSSQLUser, $MSSQLPassword
 
     # Initiate a collection to hold stats data.
     $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
-    <#
-        - YOUR_COMMENT
-    #>
     # Gather number of connections per database on the specifieed MSSQL instance.
     foreach ($Database in $Databases) {
-        [Array]$QueryResult = Invoke-DbaSqlQuery -SqlInstance $MSSQLInstance -Query "
+        [Array]$QueryResult = Invoke-DbaSqlQuery -SqlCredential $Credential -SqlInstance $MSSQLInstance -Query "
             SELECT DB_NAME(dbid) as DBName, HostName, COUNT(dbid) as Connections
             FROM sys.sysprocesses with (nolock)
             WHERE dbid > 0

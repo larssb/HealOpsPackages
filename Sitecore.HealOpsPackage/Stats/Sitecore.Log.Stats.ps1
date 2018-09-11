@@ -29,7 +29,7 @@ Begin {
         - Declare variables, that will be re-used throughout the script.
     #>
     # The name of the website running Sitecore.
-    $WebSiteName = "DanskeSpil.Website"
+    $WebSiteName = ""
 
     # Initiate a collection to hold stats data.
     $MetricsCollection = Out-MetricsCollectionObject

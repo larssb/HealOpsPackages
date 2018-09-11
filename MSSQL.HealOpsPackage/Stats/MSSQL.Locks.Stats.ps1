@@ -25,14 +25,18 @@ Begin {
     <#
         - Declare variables, that will be re-used throughout the script.
     #>
+    # MSSQL instance
     $MSSQLInstance = ""
+    $MSSQLUser = ""
+    $MSSQLPassword = ConvertTo-SecureString -String "" -AsPlainText -Force
+    $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $MSSQLUser, $MSSQLPassword
 
     # Initiate a collection to hold stats data.
     $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
     # Gather locks info on the instance level.
-    [Array]$QueryResult = Invoke-DbaSqlQuery -Database "DevOpsTools" -SqlInstance $MSSQLInstance -Query "exec sp_WhoIsActive"
+    [Array]$QueryResult = Invoke-DbaSqlQuery -Database "DevOpsTools" -SqlCredential $Credential -SqlInstance $MSSQLInstance -Query "exec sp_WhoIsActive"
 
     [Int32]$LockCount = 0
     foreach ($item in $QueryResult) {

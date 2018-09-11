@@ -28,6 +28,11 @@ Begin {
     <#
         - Declare variables, that will be re-used throughout the script.
     #>
+    # MSSQL instance creds
+    $MSSQLUser = ""
+    $MSSQLPassword = ConvertTo-SecureString -String "" -AsPlainText -Force
+    $Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $MSSQLUser, $MSSQLPassword
+
     # General
     [int]$DataSrcIdx = 2
     [int]$DatabaseNameIdx = 3
@@ -103,7 +108,7 @@ Process {
     #>
     # Fetch count on the event queue table in the [CORE] db.
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "EventQueue" -QueryType "Count"
-    $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
+    $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlCredential $Credential -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
     # Get a MetricItem object and populate its properties
     $MetricItem_CoreDB = Out-MetricItemObject
@@ -117,7 +122,7 @@ Process {
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "EventQueue" -QueryType "Count"
-    $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
+    $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlCredential $Credential -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
 
     # Get a MetricItem object and populate its properties
     $MetricItem_WebDB = Out-MetricItemObject
@@ -134,7 +139,7 @@ Process {
     #>
     # Fetch count on the event queue table in the [CORE] db.
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "PublishQueue" -QueryType "Count"
-    $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
+    $QueryResult_CoreDB = Invoke-DbaSqlQuery -As SingleValue -SqlCredential $Credential -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
     # Get a MetricItem object and populate its properties
     $MetricItem_CoreDB = Out-MetricItemObject
@@ -148,7 +153,7 @@ Process {
 
     # Fetch count on the event queue table in the [WEB] db.
     $QueryToExecute_WebDB = Out-SiteCoreQuery -DBName "$WebDB_Name" -TableName "PublishQueue" -QueryType "Count"
-    $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
+    $QueryResult_WebDB = Invoke-DbaSqlQuery -As SingleValue -SqlCredential $Credential -SqlInstance $WebDB_DataSrc -Query $QueryToExecute_WebDB
 
     # Get a MetricItem object and populate its properties
     $MetricItem_WebDB = Out-MetricItemObject
@@ -164,7 +169,7 @@ Process {
         - Queue - Behind, per server, on CORE DB.
     #>
     $QueryToExecute_CoreDB = Out-SiteCoreQuery -DBName "$CoreDB_Name" -TableName "Properties" -QueryType "QueueBehind"
-    $QueryResult_CoreDB = Invoke-DbaSqlQuery -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
+    $QueryResult_CoreDB = Invoke-DbaSqlQuery -SqlCredential $Credential -SqlInstance $CoreDB_DataSrc -Query $QueryToExecute_CoreDB
 
     foreach ($Row in $QueryResult_CoreDB) {
         $StatsOwner = ($Row.Key -Split "_")[1]
