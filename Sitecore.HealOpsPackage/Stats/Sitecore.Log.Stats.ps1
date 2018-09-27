@@ -35,6 +35,14 @@ Begin {
     $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
+    <#
+        - TEMP. Perf. improvements....implement the below
+            > stop using get-content, select-string should be able to take a file directly
+            > Use the .NET StreamReader > https://powershell.org/2013/10/21/why-get-content-aint-yer-friend/
+                >> and a nice snippet here > https://foxdeploy.com/2016/03/23/coding-for-speed/
+            > Test the ReadAllText() method. This coould be fast as well.
+    #>
+
     # Get the physical path of the website
     $WebSitePath = (Get-Website -Name $WebSiteName).PhysicalPath
     $SitecoreLogPath = "$WebSitePath\App_Data\logs"
