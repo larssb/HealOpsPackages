@@ -45,10 +45,40 @@ Process {
 
     # Get the physical path of the website
     $WebSitePath = (Get-Website -Name $WebSiteName).PhysicalPath
-    $SitecoreLogPath = "$WebSitePath\App_Data\logs"
+    $SitecoreLogPath = "$WebSitePath\App_Data\logs\log.20180922.txt"
+    #$SitecoreLogPath = "$WebSitePath\App_Data\logs"
+
+    # Setup a streamreader to process the Sitecore log
+    #$Results = @{}
+    [System.Collections.ArrayList]$Results = New-Object System.Collections.ArrayList
+    $File = New-Object System.IO.StreamReader -ArgumentList $SitecoreLogPath
+
+    :loop while ($true)
+    {
+        # Read this line
+        $Line = $File.ReadLine()
+        if ($null -eq $Line) {
+            # If the line was $null, we're at the end of the file, let's break
+            $File.close()
+            break loop
+        }
+
+        # Do something with our line here
+        #if($line.StartsWith('[Re')) {
+        if($Line.Contains('ERROR')) {
+            #$Results[$Line] += 1
+            $Results.Add($Line) | Out-Null
+        }
+
+    }
+
+    Write-host "Results count is > $($Results.Count | Out-String)"
 
     # Get the newest Sitecore log &
-    $Errors = Get-Item -Path $SitecoreLogPath/* -Include log* | Sort-Object -Property LastWriteTime | Select-Object -Last 1 | Get-Content | Select-String -CaseSensitive -Pattern "ERROR"
+    #$Errors = Get-Item -Path "$SitecoreLogPath/log.20180922.txt" | Get-Content | Select-String -CaseSensitive -Pattern "ERROR"
+    #Sort-Object -Property LastWriteTime | Select-Object -Last 1 | Get-Content | Select-String -CaseSensitive -Pattern "ERROR"
+
+    #Write-host "Errrs count is > $($Errors.Count | Out-String)"
 
     # Get a MetricItem object and populate its properties
     $MetricItem = Out-MetricItemObject
