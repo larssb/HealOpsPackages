@@ -35,24 +35,23 @@ Begin {
     $MetricsCollection = Out-MetricsCollectionObject
 }
 Process {
-    <#
-        - TEMP. Perf. improvements....implement the below
-            > stop using get-content, select-string should be able to take a file directly
-            > Use the .NET StreamReader > https://powershell.org/2013/10/21/why-get-content-aint-yer-friend/
-                >> and a nice snippet here > https://foxdeploy.com/2016/03/23/coding-for-speed/
-            > Test the ReadAllText() method. This coould be fast as well.
-    #>
-
     # Get the physical path of the website
     $WebSitePath = (Get-Website -Name $WebSiteName).PhysicalPath
-    $SitecoreLogPath = "$WebSitePath\App_Data\logs\log.20180922.txt"
-    #$SitecoreLogPath = "$WebSitePath\App_Data\logs"
+
+    # Get the newest Sitecore log
+    $SitecoreLogPath = "$WebSitePath\App_Data\logs"
+    $SitecoreLog = Get-Item -Path $SitecoreLogPath/* -Include log* | Sort-Object -Property LastWriteTime | Select-Object -Last 1
 
     # Setup a streamreader to process the Sitecore log
-    #$Results = @{}
     [System.Collections.ArrayList]$Results = New-Object System.Collections.ArrayList
-    $File = New-Object System.IO.StreamReader -ArgumentList $SitecoreLogPath
+    try {
+        $FileOpen = [System.IO.File]::Open($($SitecoreLog.FullName), "Open", "Read", "ReadWrite")
+        $File = New-Object System.IO.StreamReader -ArgumentList $FileOpen
+    } catch {
+        $log4netLogger.error("Failed accessing the Sitecore logfile at $($SitecoreLog.FullName). Failed with > $_")
+    }
 
+    # Process the Sitecore log
     :loop while ($true)
     {
         # Read this line
@@ -63,28 +62,17 @@ Process {
             break loop
         }
 
-        # Do something with our line here
-        #if($line.StartsWith('[Re')) {
+        # Find all ERROR log lines
         if($Line.Contains('ERROR')) {
-            #$Results[$Line] += 1
             $Results.Add($Line) | Out-Null
         }
-
     }
-
-    Write-host "Results count is > $($Results.Count | Out-String)"
-
-    # Get the newest Sitecore log &
-    #$Errors = Get-Item -Path "$SitecoreLogPath/log.20180922.txt" | Get-Content | Select-String -CaseSensitive -Pattern "ERROR"
-    #Sort-Object -Property LastWriteTime | Select-Object -Last 1 | Get-Content | Select-String -CaseSensitive -Pattern "ERROR"
-
-    #Write-host "Errrs count is > $($Errors.Count | Out-String)"
 
     # Get a MetricItem object and populate its properties
     $MetricItem = Out-MetricItemObject
     $MetricItem.Metric = "sitecore.log.errors"
     $MetricItem.MetricData = @{
-        "Value" = $Errors.Count
+        "Value" = $Results.Count
     }
 
     # Add the result to the Stats collection.
