@@ -14,6 +14,8 @@ Describe "sitecore.website" {
                 2. that the MSSQL backend is up
                 3. Implicitly that the IIS website is up and running.
                     3a. Thereby implicitly that the app. pool for the website is running.
+
+            N.B. IT IS NOT A STD. ENDPOINT. SO IT IS NOT AVAILBLE ON A VANILLA SITECORE INSTALLATION!
         #>
         $URI = "http://localhost:8080/Components/Common/Framework/Healthcheck/Presentation/SystemDiagnostics.aspx"
 

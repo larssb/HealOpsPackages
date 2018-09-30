@@ -12,7 +12,7 @@
     Author = 'Lars S. Bengtsson | https://github.com/larssb | https://bengtssondd.it'
 
     # Copyright statement for this module
-    Copyright = '(c) Lars Bengtsson. All rights reserved.'
+    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under the MIT License.'
 
     # Description of the functionality provided by this module
     Description = 'A rather generic HealOps package for testing and repairing on Windows system related states.'

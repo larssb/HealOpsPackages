@@ -1,5 +1,4 @@
 @{
-
     # Version number of this module.
     ModuleVersion = '1.0.0'
 
@@ -7,7 +6,7 @@
     GUID = 'd1b04f62-83c7-453b-8f10-ed87de946d8a'
 
     # Author of this module
-    Author = 'Lars Bengtsson | larssb on GitHub'
+    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under the MIT License.'
 
     # Copyright statement for this module
     Copyright = '(C) Lars Bengtsson | larssb on GitHub. All rights reserved.'

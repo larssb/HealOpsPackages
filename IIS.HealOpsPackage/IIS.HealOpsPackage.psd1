@@ -8,11 +8,8 @@
     # Author of this module
     Author = 'Lars Bengtsson | https://github.com/larssb | https://bengtssondd.it'
 
-    # Company or vendor of this module
-    #CompanyName = 'Unknown'
-
     # Copyright statement for this module
-    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under Apache 2.0 License.'
+    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under the MIT License.'
 
     # Description of the functionality provided by this module
     Description = 'A package for testing, monitoring and providing stats on a Microsoft IIS Webserver.'

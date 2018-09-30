@@ -25,7 +25,7 @@ Begin {
     <#
         - Declare variables, that will be re-used throughout the script.
     #>
-    [String]$URI = "https://bengtssondd.it"
+    [String]$URI = ""
 
     # Initiate a collection to hold stats data.
     $StatsCollection = Out-StatsCollectionObject
@@ -41,7 +41,7 @@ Process {
 
     # Get a StatsItem object and populate its properties
     $StatsItem = Out-StatsItemObject
-    $StatsItem.Metric = "bdd.blog.responsetime"
+    $StatsItem.Metric = ""
     $StatsItem.StatsData = @{
         "ResponseTime" = $Time.Milliseconds
     }

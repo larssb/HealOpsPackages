@@ -9,7 +9,7 @@
     Author = 'Lars Bengtsson | https://github.com/larssb | https://bengtssondd.it'
 
     # Copyright statement for this module
-    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under Apache 2.0 License.'
+    Copyright = 'Lars S. Bengtsson | (https://github.com/larssb), licensed under the MIT License.'
 
     # Description of the functionality provided by this module
     Description = 'This HealOpsPackage contains tests, repairs and stats files for monitoring, repairing and gathering stats on MSSQL server infrastructure- and instances. '

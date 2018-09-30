@@ -1,5 +1,5 @@
-# General documentation on <%=$PLASTER_PARAM_ModuleName%>
+# General documentation on ...
 
-## 
+##
 
 ##

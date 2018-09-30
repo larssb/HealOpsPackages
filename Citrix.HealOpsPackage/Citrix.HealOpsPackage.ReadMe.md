@@ -1,5 +1,5 @@
-# General documentation on the Citrix.HealOpsPackage package.
+# Documentation on the Citrix.HealOpsPackage package.
 
-## 
+##
 
 ##
